@@ -1,0 +1,9 @@
+[Exec]
+Boot=yes
+PrivateUsers=no
+LimitNOFILE=infinity
+Capability=all
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/root/strfry-data-dirs:/app/curldown
