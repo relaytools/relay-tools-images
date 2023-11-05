@@ -1,0 +1,9 @@
+[Exec]
+Boot=no
+Parameters=/bin/bash
+WorkingDirectory=/app
+PrivateUsers=no
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/root/relaycreator:/app
