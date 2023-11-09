@@ -1,0 +1,9 @@
+[Unit]
+Description=Run strfrycheck
+
+[Timer]
+# run checks once a minute
+OnCalendar=*-*-* *:*:05
+
+[Install]
+WantedBy=timers.target
