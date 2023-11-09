@@ -8,14 +8,14 @@ apt-get install -y net-tools systemd-container
 ## TODO: automated builds for these
 #download strfry.tar (image)
 #download haproxy.tar (image)
-#download  nonext.tar (image)
+#download  creator.tar (image)
 
 ## INSTALL MYSQL
 #do a mysql image || install mysql-server
 
 #machinectl import-tar strfry.tar.gz
 #machinectl import-tar haproxy.tar.gz
-#machinectl import-tar nonext.tar.gz
+#machinectl import-tar creator.tar.gz
 
 # setup systemd-nspawn configs
 # copy nspawn configs into /etc/systemd/nspawn

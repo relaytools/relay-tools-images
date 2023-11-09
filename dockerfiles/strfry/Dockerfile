@@ -21,12 +21,14 @@ RUN apt update && apt install -y \
     libzstd-dev
 
 # extras
-RUN apt update && apt install -y curl jq vim
+RUN apt update && apt install -y curl wget jq vim
 
-COPY . .
-RUN git submodule update --init
-RUN make setup-golpe
-RUN make -j4
+# build strfry
+RUN git clone https://github.com/hoytech/strfry.git \
+  && cd strfry \
+  && git submodule update --init \
+  && make setup-golpe \
+  && make -j4
 
 RUN apt update && apt install -y --no-install-recommends \
     liblmdb0 libflatbuffers1 libsecp256k1-0 libb2-1 libzstd1 \
@@ -35,15 +37,17 @@ RUN apt update && apt install -y --no-install-recommends \
 # begin customizations for relay.tools
 RUN echo "root:root" | chpasswd
 
-# manual steps
+# install spamblaster
+RUN wget https://github.com/relaytools/spamblaster/releases/download/v0.0.3/spamblaster_linux_x86_64.tar.gz
+RUN tar -xzvf spamblaster_linux_x86_64.tar.gz -C /usr/local/bin
 
 # install cookiecutter
+RUN wget https://github.com/relaytools/cookiecutter/releases/download/v0.0.2/cookiecutter_linux_x86_64.tar.gz
+RUN tar -xzvf cookiecutter_linux_x86_64.tar.gz -C /usr/local/bin
 
-# configure cookiecutter
-
-# install spamblaster
-
-# configure spamblaster env (influx)
+COPY strfrycheck.service /etc/systemd/system/strfrycheck.service
+COPY strfrycheck.timer /etc/systemd/system/strfrycheck.timer
+RUN systemctl enable strfrycheck.timer
 
 ENTRYPOINT ["/app/strfry"]
 CMD ["relay"]
