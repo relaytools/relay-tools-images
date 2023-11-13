@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cat creator.passwd
+systemd-nspawn --boot -q -D /var/lib/machines/creator -U --machine creator
