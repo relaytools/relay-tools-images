@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c32)
+echo $PASSWORD>.passwd
+
+rm -rf debian
+debootstrap --include=systemd,dbus stable debian
+cat bash.bashrc >> debian/etc/bash.bashrc
+systemd-nspawn --pipe -q -D debian /usr/bin/bash << EOF
+
+apt -y install wget micro
+wget https://go.dev/dl/go1.20.11.linux-amd64.tar.gz
+tar xvf go1.20.11.linux-amd64.tar.gz
+mv go /usr/local/
+echo -e "$PASSWORD\n$PASSWORD" | passwd
+
+EOF
+rm -rf debian/var/cache/apt/archives/*
+# tar -cvJf debian.tar.xz -C debian .
+# rm -rf debian
+export PATH=.:$PATH

@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+./mariadb.clean
+PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c32)
+echo $PASSWORD>mariadb.passwd
+cp -rfvpu debian mariadb
+mkdir /var/lib/mysql
+chown 101:108 /var/lib/mysql
+systemd-nspawn --pipe -q -D mariadb /usr/bin/bash << EOF
+	apt -y install mariadb-server
+	systemctl enable mariadb
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "mariadb">/etc/hostname
+EOF
+mv mariadb /var/lib/machines/mariadb
+cp mariadb.nspawn /etc/systemd/nspawn/mariadb.nspawn
+

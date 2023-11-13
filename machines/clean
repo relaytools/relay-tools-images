@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+rm -rf debian.tar.xz debian .passwd

@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cat .passwd
+systemd-nspawn --boot -D debian -U --machine debian
