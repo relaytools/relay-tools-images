@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cat mariadb.passwd
+systemd-nspawn --boot -q -D /var/lib/machines/mariadb -U --machine mariadb
