@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cat haproxy.passwd
+systemd-nspawn --boot -q -D /var/lib/machines/haproxy -U --machine haproxy
