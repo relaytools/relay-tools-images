@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cat strfry.passwd
+systemd-nspawn --boot -q -D /var/lib/machines/strfry -U --machine strfry
