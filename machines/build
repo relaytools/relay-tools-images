@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c32)
+PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
 echo $PASSWORD>.passwd
 
 rm -rf debian

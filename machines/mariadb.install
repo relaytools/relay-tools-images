@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ./mariadb.clean
-PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c32)
+PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
 echo $PASSWORD>mariadb.passwd
 cp -rfpu debian mariadb
 mkdir /var/lib/mysql
