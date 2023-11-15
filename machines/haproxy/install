@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
+echo $PASSWORD>$RD/$APP.passwd
+cp -rfpu $RD/debian /var/lib/machines/$APP
+mkdir /var/lib/machines/$APP/app
+cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+mkdir /var/lib/$APP
+systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
+	. /etc/bash.bashrc
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "$APP">/etc/hostname
+	apt update
+	apt -y install --no-install-suggests git
+
+	# build and install cookiecutter
+	git clone https://github.com/relaytools/cookiecutter.git /app
+	cd /app
+	/usr/local/go/bin/go build
+	# cp cookiecutter /etc/haproxy/cookiecutter
+	# ln /etc/haproxy/cookiecutter /app/curldown/cookiecutter
+
+	# cp haproxycheck.service /etc/systemd/system/haproxycheck.service
+	# cp haproxycheck.timer /etc/systemd/system/haproxycheck.timer
+	# systemctl enable haproxycheck.timer
+	# cp strfrycheck.service /etc/systemd/system/strfrycheck.service
+	# cp strfrycheck.timer /etc/systemd/system/strfrycheck.timer
+	# systemctl enable strfrycheck.timer
+
+EOF
+systemctl stop systemd-nspawn@$APP

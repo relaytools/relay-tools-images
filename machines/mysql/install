@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
+echo $PASSWORD>$RD/$APP.passwd
+cp -rfpu $RD/debian /var/lib/machines/$APP
+mkdir /var/lib/$APP
+chown 101:108 /var/lib/$APP
+cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
+	. /etc/bash.bashrc
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "$APP">/etc/hostname
+	apt -y install mariadb-server --no-install-suggests
+	systemctl enable mariadb
+EOF
+systemctl stop systemd-nspawn@$APP

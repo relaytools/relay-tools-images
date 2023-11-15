@@ -1,2 +1,8 @@
 #!/usr/bin/bash
-rm -rf debian.tar.xz debian .passwd
+# get paths for script
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+rm -rf $SD/debian.tar.xz $SD/debian $SD/.passwd
+# ./haproxy/clean
+# ./mariadb/clean
+# ./strfry/clean
+# ./creator/clean
