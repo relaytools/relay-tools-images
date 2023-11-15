@@ -1,3 +1,4 @@
+mkdir -p $HOME/.local/bin
 export GOBIN=$HOME/.local/bin
 export GOPATH=$HOME
 export GOROOT=/usr/local/go
