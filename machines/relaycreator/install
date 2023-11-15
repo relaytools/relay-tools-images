@@ -10,7 +10,7 @@ mkdir /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 mkdir /var/lib/$APP
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
-	. /etc/bash.bashrc
+	export PATH=/usr/local/go/bin:$PATH
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
 	apt update
@@ -19,4 +19,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	git clone https://github.com/relaytools/relaycreator.git /app
 	npm install
 	npm run build
+	git clone https://github.com/mleku/signr.git 
+	cd signr
+	go install
 EOF
