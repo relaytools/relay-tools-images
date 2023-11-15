@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-rm -rf /var/lib/machines/haproxy /etc/systemd/nspawn/haproxy.nspawn \
-	haproxy haproxy.tar.xz haproxy.passwd
