@@ -14,3 +14,4 @@ PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;37m\]\u@\h\
 export HISTCONTROL="erasedups"
 export HISTIGNORE="ls:history"
 export HISTSIZE=100000
+clear
