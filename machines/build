@@ -1,18 +1,24 @@
 #!/usr/bin/bash
+# get paths for script
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# generate root password to enable login
 PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
-echo $PASSWORD>.passwd
-
-rm -rf debian
-debootstrap --include=systemd,dbus stable debian
-cat bash.bashrc >> debian/etc/bash.bashrc
-systemd-nspawn --pipe -q -D debian /usr/bin/bash << EOF
+# store password for console command to display prior to entering container
+echo $PASSWORD>$SD/.passwd
+# generate a rootfs with systemd and dbus enabled for debian stable
+debootstrap --include=systemd,dbus stable $SD/debian
+# append important additional directives in shell startup for Go and other 
+# handy things
+cat $SD/bash.bashrc >> $SD/debian/etc/bash.bashrc
+# set up the rootfs with essential tools used by the other containers
+systemd-nspawn --pipe -q -D $SD/debian /usr/bin/bash << EOF
+	apt -y full-upgrade
 	apt -y install wget micro
 	wget https://go.dev/dl/go1.20.11.linux-amd64.tar.gz
 	tar xvf go1.20.11.linux-amd64.tar.gz
 	mv go /usr/local/
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 EOF
-rm -rf debian/var/cache/apt/archives/*
+rm -rf $SD/debian/var/cache/apt/archives/*
 # tar -cvJf debian.tar.xz -C debian .
 # rm -rf debian
-export PATH=.:$PATH

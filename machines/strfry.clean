@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-rm -rf /var/lib/machines/strfry /etc/systemd/nspawn/strfry.nspawn \
-	strfry strfry.tar.xz strfry.passwd
