@@ -1,6 +1,6 @@
 [Exec]
-Boot=no
-Parameters=/usr/bin/npm start
+Boot=yes
+#Parameters=/usr/bin/npm start
 WorkingDirectory=/app
 PrivateUsers=no
 [Network]
