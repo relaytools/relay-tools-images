@@ -7,6 +7,7 @@ PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
 echo $PASSWORD>$RD/$APP.passwd
 cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir /var/lib/$APP
+mkdir /var/lib/machines/$APP
 chown 101:108 /var/lib/$APP
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
