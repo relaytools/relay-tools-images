@@ -6,4 +6,4 @@ LimitNOFILE=infinity
 [Network]
 VirtualEthernet=no
 [Files]
-Bind=/var/lib/mysql:/var/lib/mysql
+Bind=/srv/mysql:/var/lib/mysql
