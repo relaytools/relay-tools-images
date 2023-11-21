@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
+echo $PASSWORD>$RD/$APP.passwd
+cp -rfpu $RD/debian /var/lib/machines/$APP
+mkdir -p /var/lib/machines/$APP/app
+cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+mkdir /var/lib/$APP
+systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
+	export PATH=/usr/local/go/bin:$PATH
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "$APP">/etc/hostname
+	apt update
+	apt -y install --no-install-suggests git build-essential \
+		git g++ make pkg-config libtool ca-certificates \
+   		libyaml-perl libtemplate-perl libregexp-grammars-perl libssl-dev \
+		zlib1g-dev liblmdb-dev libflatbuffers-dev libsecp256k1-dev libzstd-dev
+	git clone https://github.com/hoytech/strfry.git /app/strfry
+	cd /app/strfry
+	git pull
+	git submodule update --init
+	make setup-golpe
+	make
+	mv strfry /usr/local/bin/
+	mkdir /app/cookiecutter
+	# build and install cookiecutter
+	git clone https://github.com/relaytools/cookiecutter.git /app/cookiecutter
+	cd /app/cookiecutter
+	git pull
+	go build -x
+	
+EOF
+systemctl stop systemd-nspawn@$APP
