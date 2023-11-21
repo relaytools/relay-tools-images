@@ -1,9 +1,0 @@
-[Exec]
-Boot=no
-Parameters=/usr/local/bin/npm start
-WorkingDirectory=/app
-PrivateUsers=no
-[Network]
-VirtualEthernet=no
-[Files]
-Bind=/root/relaycreator:/app
