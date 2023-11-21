@@ -6,4 +6,4 @@ PrivateUsers=no
 [Network]
 VirtualEthernet=no
 [Files]
-Bind=/var/lib/relaycreator:/app
+Bind=/srv/relaycreator:/app
