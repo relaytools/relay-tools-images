@@ -6,6 +6,15 @@ scripts/bootstrap.sh installs the required settings for large strfry instances a
 
 todo: modify scripts/bootstrap.sh to drop in the nspawns from the nspawn/ directory.  set them up with the Bind= paths mentioned below.
 
+clone this repository to your VPS:
+
+    git clone https://github.com/relaytools/relay-tools-images.git
+
+bootstrap the nspawn images:
+
+    cd relay-tools-images
+    scripts/bootstrap.sh
+
 ## relaycreator
 
 ### configuring

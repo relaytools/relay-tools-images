@@ -1,0 +1,10 @@
+[Exec]
+Boot=yes
+#Parameters=/usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+WorkingDirectory=/
+PrivateUsers=no
+LimitNOFILE=infinity
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/var/lib/haproxy:/etc/haproxy

@@ -1,0 +1,9 @@
+[Exec]
+Boot=yes
+Parameters=
+PrivateUsers=no
+LimitNOFILE=infinity
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/var/lib/mysql:/var/lib/mysql

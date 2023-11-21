@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+# get paths for script
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# print the password so the user can c&p into the login prompt
+cat $SD/.passwd
+# this generic command will start up any systemd and dbus things and open a 
+# login shell prompt
+systemd-nspawn --boot -D $SD/debian -U --machine debian
