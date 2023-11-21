@@ -7,4 +7,4 @@ LimitNOFILE=infinity
 [Network]
 VirtualEthernet=no
 [Files]
-Bind=/var/lib/haproxy:/etc/haproxy
+Bind=/srv/haproxy:/etc/haproxy

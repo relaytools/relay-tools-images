@@ -6,4 +6,4 @@ Capability=all
 [Network]
 VirtualEthernet=no
 [Files]
-#Bind=/var/lib/strfry:/app
+Bind=/srv/strfry:/srv/strfry
