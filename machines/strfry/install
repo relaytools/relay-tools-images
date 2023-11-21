@@ -8,7 +8,7 @@ echo $PASSWORD>$RD/$APP.passwd
 cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir -p /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
-mkdir /var/lib/$APP
+mkdir -p /srv/strfry
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	export PATH=/usr/local/go/bin:$PATH
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
@@ -31,6 +31,10 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd /app/cookiecutter
 	git pull
 	go build -x
-	
+	cp cookiecutter /usr/local/bin
+	mkdir -p /srv/strfry
+	cp strfrycheck.service /lib/systemd/system
+	cp strfrycheck.timer /lib/systemd/system
+	systemctl enable strfrycheck.timer
 EOF
 systemctl stop systemd-nspawn@$APP

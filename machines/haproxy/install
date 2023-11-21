@@ -8,7 +8,7 @@ echo $PASSWORD>$RD/$APP.passwd
 cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
-mkdir /var/lib/$APP
+mkdir -p /srv/haproxy
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
@@ -20,15 +20,9 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	git clone https://github.com/relaytools/cookiecutter.git /app
 	cd /app
 	/usr/local/go/bin/go build
-	# cp cookiecutter /etc/haproxy/cookiecutter
-	# ln /etc/haproxy/cookiecutter /app/curldown/cookiecutter
-
-	# cp haproxycheck.service /etc/systemd/system/haproxycheck.service
-	# cp haproxycheck.timer /etc/systemd/system/haproxycheck.timer
-	# systemctl enable haproxycheck.timer
-	# cp strfrycheck.service /etc/systemd/system/strfrycheck.service
-	# cp strfrycheck.timer /etc/systemd/system/strfrycheck.timer
-	# systemctl enable strfrycheck.timer
-
+	cp cookiecutter /usr/local/bin/cookiecutter
+	cp haproxycheck.service /lib/systemd/system/haproxycheck.service
+	cp haproxycheck.timer /lib/systemd/system/haproxycheck.timer
+	systemctl enable haproxycheck.timer
 EOF
 systemctl stop systemd-nspawn@$APP
