@@ -22,3 +22,16 @@ EOF
 rm -rf $SD/debian/var/cache/apt/archives/*
 # tar -cvJf debian.tar.xz -C debian .
 # rm -rf debian
+
+mkdir -p /srv/strfry
+# add .cookiecutter.env to /app/strfry/.cookiecutter.env
+
+mkdir -p /srv/haproxy
+# add all necessary skeleton files for haproxy which will be mounted into /etc/haproxy
+# add .cookiecutter.env to /app/haproxy
+
+mkdir -p /srv/mysql
+# todo: do we need a my.cnf or additional mount for /etc/mysql?
+
+mkdir -p /srv/relaycreator
+# add .env to /srv/relaycreator

@@ -1,9 +1,0 @@
-[Unit]
-Description=Run haproxycheck
-
-[Timer]
-# run checks once a minute
-OnCalendar=*-*-* *:*:00
-
-[Install]
-WantedBy=timers.target

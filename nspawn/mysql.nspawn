@@ -1,9 +1,0 @@
-[Exec]
-Boot=no
-Parameters=/usr/local/bin/docker-entrypoint.sh mysqld
-PrivateUsers=no
-LimitNOFILE=infinity
-[Network]
-VirtualEthernet=no
-[Files]
-#Bind=/var/lib/mysql:/var/lib/mysql
