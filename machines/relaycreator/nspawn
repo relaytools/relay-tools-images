@@ -1,0 +1,9 @@
+[Exec]
+Boot=yes
+#Parameters=/usr/bin/npm start
+WorkingDirectory=/app
+PrivateUsers=no
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/var/lib/relaycreator:/app
