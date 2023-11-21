@@ -1,80 +1,37 @@
-notes on what is needed to build and deploy, in-progress
+# machines
 
-## bootstrap
+In this folder are scripts to build nspawn images for the various components of relay-tools.
 
-scripts/bootstrap.sh installs the required settings for large strfry instances and systemd-nspawn container support
+## base image
 
-todo: modify scripts/bootstrap.sh to drop in the nspawns from the nspawn/ directory.  set them up with the Bind= paths mentioned below.
+In the root there is a `build`, `clean` and `console`. 
 
-clone this repository to your VPS:
+- `build` creates a debian rootfs with Go installed that is used by the images in the subfolders.
+- `clean` clears all of the rootfs and calls the clean functions of all the others' clean functions.
+- `console` boots the base debian image and drops you in a shell.
 
-    git clone https://github.com/relaytools/relay-tools-images.git
+Note that all `console` scripts provide a password for root to login, which is created in the install process, including the base `build` script, for the base debian image.
 
-bootstrap the nspawn images:
+## subfolders/nspawn images
 
-    cd relay-tools-images
-    scripts/bootstrap.sh
+Within the subfolders `haproxy`, `mysql`, `relaycreator` and `strfry` there is a common set of functions whose choice of names for the nspawn images is based on the directory name. These contain the following common scripts/functions:
 
-## relaycreator
+- `clean` - deletes the image and all the deployment related files in `/etc/systemd/nspawn` and `/var/lib/machines`. generally these do not touch any bind mount folders.
+- `console` - starts up the nspawn machine using `machinectl` and logs you in to it. the password the `install` script defines is printed prior to the login so you can c&p it after typing `root` into the user prompt.
+- `start` - just starts up the nspawn image. requires that it exist, of course.
+- `status` - calls `machinectl status <imagename>` which probably will open with a pager. Of course to see all currently running images `machinectl list`.
+- `stop` - stops the nspawn image. will print nothing if it doesn't exist# install
 
-### configuring
-(nspawn)
-Bind=/path/to/relaycreator:/app
-```
-git clone
-cd
-edit the .env
-systemd-nspawn -M creator-console
-npm install
-npm run build
-run the migrations
-^D
-systemd-nspawn -M creator
-or machinectl start creator
-```
-## building
-just a node image (todo add to dockerfiles) 
+in each subfolder there is a script called `install`. 
 
-## strfry
+this script has common elements where it determines the script location in order to place a password file in the `machines` directory, where `console` will look for it, and the script takes note of its filesystem path, which is used to find any relevant things other than this, and derives the image name from the directory name so as to not have this need to be explicitly defined and fall victim to bitrot.
 
-### configuring
-we can pick better paths this is just whats here now
+each script tries to create relevant folders in `/var/lib/machines` and copies the `nspawn` file to `<appname>.nspawn` in `/etc/systemd/nspawn/`.
 
-(nspawn)
-Bind=/path/to/strfry-data-dirs:/app/curldown
+after the preparatory work, each script has an inline script within an EOF block that runs the deployment installation.
 
-In this directory need to place the cookiecutter config that must point at the relaycreator endpoint.  example cookiecutter config:
-```
-BASE_URL=http://localhost:3000
-PRIVATE_KEY=(nostr priv key)
-```
+## final notes
 
-It also where the strfry databases for every relay will be stored.
+i anticipate that there will be a need to create more scripts in the root to handle bundling the images and making a binary deployment possible, this should be easier with the test deployment available to draw from, and a total build that at the end cleans itself up and leaves you with just one `tar.xz` or so that you can just `scp` to your VPS, and unpack. 
 
-### building
-
-todo: see the dockerfile todo for adding cookiecutter
-
-```
-git clone strfry official
-
-use the dockerfile in dockerfiles/Dockerfile.bigfry to build and export strfry.tar
-
-docker build
-docker create
-docker export <docker instance from create id> -o  strfry.tar
-```
-
-## haproxy
-
-### configuring
-(nspawn)
-Bind=/path/to/haproxycfg:/etc/haproxy
-
-Right now we bind mount the entire haproxy config.  This includes ssl certificate, haproxy.cfg and other scaffolding files.  TODO: trim the scaffold down to bare minimum, deal with techdebt on some things like the favicon.. 
-
-### building
-
-use the official haproxy docker image as a base, and add in cookiecutter, and necessary extras to enable BOOT (systemd.. ) 
-
-add and enable the service for haproxycheck (using cookiecutter)
+for this i would recommend to form the archive building script so that it pulls everything from your test system's filesystem path structure (including the `/var/lib/machines` and `/etc/systemd/nspawn` and potentially the bindmount folders), so that you can just `tar xvf tarname.tar.xz /` and there would also presumably be shortcuts to trigger them to all come up, although you could just `machinectl start <imagename>` as well. 
