@@ -1,11 +1,9 @@
 [Unit]
 Description=relaycreator deployment
 
-# TODO: needs to build, migrate prisma, restart app
 [Service]
-ExecStart=/usr/bin/npm start
+ExecStart=/usr/local/bin/deploy.sh
 WorkingDirectory=/app
-Restart=always
 User=root
 Environment=NODE_ENV=production
 
