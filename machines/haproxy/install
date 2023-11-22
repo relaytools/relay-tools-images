@@ -10,13 +10,14 @@ mkdir /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 cp $SD/haproxycheck.service /var/lib/machines/$APP/lib/systemd/system/haproxycheck.service
 cp $SD/haproxycheck.timer /var/lib/machines/$APP/lib/systemd/system/haproxycheck.timer
+cp -r $SD/skel /srv/haproxy
 mkdir -p /srv/haproxy
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
 	apt update
-	apt -y install --no-install-suggests git
+	apt -y install --no-install-suggests git certbot
 
 	# build and install cookiecutter
 	git clone https://github.com/relaytools/cookiecutter.git /app

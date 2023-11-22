@@ -8,6 +8,8 @@ WorkingDirectory=/app
 Restart=always
 User=root
 Environment=NODE_ENV=production
+Type=simple
+TimeoutStopSec=0
 
 [Install]
 WantedBy=multi-user.target
