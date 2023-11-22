@@ -1,0 +1,10 @@
+[Unit]
+Description=strfrycheck
+Wants=network.target
+
+[Service]
+EnvironmentFile=/srv/strfry/.cookiecutter.env
+ExecStart=/usr/local/bin/cookiecutter strfrydeploy
+WorkingDirectory=/app/curldown
+User=root
+Group=root

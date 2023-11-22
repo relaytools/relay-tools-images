@@ -8,6 +8,8 @@ echo $PASSWORD>$RD/$APP.passwd
 cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+cp $SD/haproxycheck.service /var/lib/machines/$APP/lib/systemd/system/haproxycheck.service
+cp $SD/haproxycheck.timer /var/lib/machines/$APP/lib/systemd/system/haproxycheck.timer
 mkdir -p /srv/haproxy
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
@@ -21,8 +23,6 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd /app
 	/usr/local/go/bin/go build
 	cp cookiecutter /usr/local/bin/cookiecutter
-	cp haproxycheck.service /lib/systemd/system/haproxycheck.service
-	cp haproxycheck.timer /lib/systemd/system/haproxycheck.timer
 	systemctl enable haproxycheck.timer
 EOF
 systemctl stop systemd-nspawn@$APP
