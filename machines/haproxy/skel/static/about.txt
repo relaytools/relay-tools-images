@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Acme
+- Font Author: Copyright (c) 2011 by Juan Pablo del Peral (info@huertatipografica.com.ar), with Reserved Font Name "Acme"
+- Font Source: http://fonts.gstatic.com/s/acme/v21/RrQfboBx-C5_bx3Lb23lzLk.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
