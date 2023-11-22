@@ -10,6 +10,9 @@ mkdir -p /var/lib/machines/$APP/app
 mkdir -p /srv/relaycreator
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 cp $SD/app.service /var/lib/machines/$APP/lib/systemd/system/app.service
+cp $SD/deploy.service /var/lib/machines/$APP/lib/systemd/system/deploy.service
+cp $SD/deploy.timer /var/lib/machines/$APP/lib/systemd/system/deploy.timer
+cp $SD/deploy.sh /var/lib/machines/$APP/usr/local/bin/deploy.sh
 mkdir /srv/$APP
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	export PATH=/usr/local/go/bin:$PATH
@@ -25,5 +28,6 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd signr
 	go install
 	systemctl enable app
+	systemctl enable deploy.timer
 EOF
 systemctl stop systemd-nspawn@$APP
