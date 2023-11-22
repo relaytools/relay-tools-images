@@ -1,7 +1,7 @@
 [Unit]
 Description=First Run MariaDB bootstrap script
-After=network.target
-After=mariadb
+After=network.target mariadb.service
+Requires=mariadb.service
 
 [Service]
 ExecStart=/usr/local/bin/firstrun.sh
