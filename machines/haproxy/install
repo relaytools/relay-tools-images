@@ -18,7 +18,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	echo "$APP">/etc/hostname
 
 	apt update
-	apt -y install --no-install-suggests git certbot gpg
+	apt -y install --no-install-suggests git certbot gpg curl
 
 	curl https://haproxy.debian.net/bernat.debian.org.gpg | gpg --dearmor > /usr/share/keyrings/haproxy.debian.net.gpg
 	echo deb "[signed-by=/usr/share/keyrings/haproxy.debian.net.gpg]" http://haproxy.debian.net bookworm-backports-2.8 main > /etc/apt/sources.list.d/haproxy.list
