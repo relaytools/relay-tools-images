@@ -9,6 +9,7 @@ cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir -p /var/lib/machines/$APP/app
 mkdir -p /srv/relaycreator
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+cp $SD/app.service /var/lib/machines/$APP/lib/systemd/system/app.service
 mkdir /srv/$APP
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	export PATH=/usr/local/go/bin:$PATH
@@ -23,5 +24,6 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	git clone https://github.com/mleku/signr.git 
 	cd signr
 	go install
+	systemctl enable app
 EOF
 systemctl stop systemd-nspawn@$APP
