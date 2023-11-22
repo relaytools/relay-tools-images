@@ -7,6 +7,10 @@ fi
 
 userpass=$(pwgen)
 
+cat <<EOF> /tmp/.creator-mysql-uri.txt
+DATABASE_URL="mysql://creator:$userpass@localhost:3306/creator"
+EOF
+
 mysql <<EOF
 create database creator;
 GRANT ALL PRIVILEGES ON creator.* TO 'creator'@'%' IDENTIFIED BY '$userpass';
