@@ -1,0 +1,10 @@
+[Unit]
+Description=First Run MariaDB bootstrap script
+After=network.target
+After=mariadb
+
+[Service]
+ExecStart=/usr/local/bin/firstrun.sh
+
+[Install]
+WantedBy=multi-user.target
