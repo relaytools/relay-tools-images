@@ -10,11 +10,14 @@ mkdir /srv/$APP
 mkdir /var/lib/machines/$APP
 chown 101:108 /var/lib/$APP
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+cp $SD/firstrun.sh /usr/local/bin/firstrun.sh
+cp $SD/firstrun.service /var/lib/machines/$APP/lib/systemd/system/firstrun.service
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
-	apt -y install mariadb-server --no-install-suggests
+	apt -y install mariadb-server pwgen --no-install-suggests
 	systemctl enable mariadb
+	systemctl enable firstrun
 EOF
 systemctl stop systemd-nspawn@$APP
