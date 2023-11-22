@@ -7,7 +7,7 @@ fi
 
 userpass=$(pwgen)
 
-cat <<EOF> /tmp/.creator-mysql-uri.txt
+cat <<EOF> /.creator-mysql-uri.txt
 DATABASE_URL="mysql://creator:$userpass@localhost:3306/creator"
 EOF
 
