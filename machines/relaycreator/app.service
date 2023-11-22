@@ -1,0 +1,13 @@
+[Unit]
+Description=relaycreator app
+Wants=network.target
+
+[Service]
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/app
+Restart=always
+User=root
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
