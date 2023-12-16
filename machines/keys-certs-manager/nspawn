@@ -1,0 +1,11 @@
+[Exec]
+Boot=no
+WorkingDirectory=/
+PrivateUsers=no
+LimitNOFILE=infinity
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/srv/haproxy:/srv/haproxy
+Bind=/srv/strfry:/srv/strfry
+Bind=/srv/relaycreator:/srv/relaycreator
