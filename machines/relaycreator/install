@@ -24,9 +24,6 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	git clone https://github.com/relaytools/relaycreator.git /app
 	npm install
 	npm run build
-	git clone https://github.com/mleku/signr.git 
-	cd signr
-	go install
 	systemctl enable app
 	systemctl enable deploy.timer
 EOF
