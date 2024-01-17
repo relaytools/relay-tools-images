@@ -30,8 +30,28 @@ each script tries to create relevant folders in `/var/lib/machines` and copies t
 
 after the preparatory work, each script has an inline script within an EOF block that runs the deployment installation.
 
-## final notes
+## example
 
-i anticipate that there will be a need to create more scripts in the root to handle bundling the images and making a binary deployment possible, this should be easier with the test deployment available to draw from, and a total build that at the end cleans itself up and leaves you with just one `tar.xz` or so that you can just `scp` to your VPS, and unpack. 
+in-progress
 
-for this i would recommend to form the archive building script so that it pulls everything from your test system's filesystem path structure (including the `/var/lib/machines` and `/etc/systemd/nspawn` and potentially the bindmount folders), so that you can just `tar xvf tarname.tar.xz /` and there would also presumably be shortcuts to trigger them to all come up, although you could just `machinectl start <imagename>` as well. 
+```
+cd relay-tools-images/machines
+# builds the debian base image and skeleton data directories in /srv
+./build
+
+cd relaycreator && ./build
+cd ..
+
+cd haproxy && ./build
+cd ..
+
+cd mysql && ./build
+cd ..
+
+cd strfry && ./build
+cd ..
+```
+
+## todo
+
+- [ ] implement certificate and keys automatic config/rotation
