@@ -2,7 +2,7 @@
 # get paths for script
 SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 rm -rf $SD/debian.tar.xz $SD/debian $SD/.passwd
-for i in haproxy mysql strfry relaycreator
+for i in haproxy mysql strfry relaycreator keys-certs-manager
 do
 	$SD/$i/stop
 	$SD/$i/clean
