@@ -2,7 +2,7 @@
 # get paths for script
 SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # generate root password to enable login
-PASSWORD=$(cat /dev/urandom | tr -dc 0-9a-zA-Z | head -c32)
+PASSWORD=creator
 # store password for console command to display prior to entering container
 echo $PASSWORD>$SD/.passwd
 # generate a rootfs with systemd and dbus enabled for debian stable

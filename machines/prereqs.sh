@@ -1,6 +1,6 @@
-#!/usr/bin/bash
+#!/bin/bash -e
 
 ## System dependencies and settings 
+export DEBIAN_FRONTEND=noninteractive
 apt update -y
-apt -y full-upgrade
 apt install -y net-tools systemd-container debootstrap xz-utils micro
