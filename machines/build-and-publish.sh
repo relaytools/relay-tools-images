@@ -8,38 +8,9 @@ export DEBIAN_FRONTEND=noninteractive
 apt update -y
 apt install awscli -y
 
-# builds debian base
+# builds all images
 ./clean
 ./build
-
-# build each image
-cd strfry
-./clean
-./install
-cd ..
-
-cd haproxy
-./clean
-./install
-cd ..
-
-cd mysql
-./clean
-./install
-cd ..
-
-cd relaycreator
-./clean
-./install
-cd ..
-
-cd keys-certs-manager
-./clean
-./install
-cd ..
-
-# export images
-machinectl list-images
 
 mkdir -p export
 machinectl export-tar strfry export/strfry.tar.gz 

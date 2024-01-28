@@ -8,7 +8,8 @@ echo $PASSWORD>$RD/$APP.passwd
 cp -rfpu $RD/debian /var/lib/machines/$APP
 mkdir /srv/$APP
 mkdir /var/lib/machines/$APP
-chown 101:108 /var/lib/$APP
+# not sure where this came from?
+# chown 101:108 /var/lib/$APP
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 cp $SD/firstrun.sh /var/lib/machines/$APP/usr/local/bin/firstrun.sh
 cp $SD/firstrun.service /var/lib/machines/$APP/lib/systemd/system/firstrun.service
