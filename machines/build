@@ -23,6 +23,9 @@ rm -rf $SD/debian/var/cache/apt/archives/*
 # tar -cvJf debian.tar.xz -C debian .
 # rm -rf debian
 
+# nspawn dir if it doesn't exist
+mkdir -p /etc/systemd/nspawn
+
 mkdir -p /srv/strfry
 # add .cookiecutter.env to /app/strfry/.cookiecutter.env
 
@@ -35,3 +38,28 @@ mkdir -p /srv/mysql
 
 mkdir -p /srv/relaycreator
 # add .env to /srv/relaycreator
+
+# build each image
+cd strfry
+./install
+cd ..
+
+cd haproxy
+./install
+cd ..
+
+cd mysql
+./install
+cd ..
+
+cd relaycreator
+./install
+cd ..
+
+cd keys-certs-manager
+./install
+cd ..
+
+echo "image install complete"
+
+machinectl list-images
