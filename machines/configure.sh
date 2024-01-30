@@ -4,6 +4,22 @@
 ### This script handles the configuration state for a deployment of relay tools.  It assumes that the images have been built or downloaded already.
 ##
 
+if [ -f ".env" ]; then
+    source .env
+else if [ -z "$MYDOMAIN" ]
+    echo "Please configure a .env file for top level configuration or set MYDOMAIN environment variable"
+    echo "MYDOMAIN=root level domain name to use"
+    echo "MYEMAIL=<optional> email address for SSL certificate registration"
+    exit 1
+fi
+
+# TODO: use a configuration method to get these settings
+# interactive vs. non-interactive TBD?
+MYDOMAIN=test.com
+
+# make this optional (used for expiry notification)
+MYEMAIL=me@test.com
+
 # Launch sequence:
 
 # launch Mysql first.
@@ -11,8 +27,8 @@
 # configure relaycreator .env
 # launch the rest
 
+# on firstrun mysql will drop a credentials URI into /srv/mysql/.creator-mysql-uri.txt
 machinectl start mysql
-
 
 # generate a nostr key for use with API
 systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
@@ -24,19 +40,19 @@ EOF
 # for use with: haproxy
 # configured in: relaycreator (path), haproxy (bundle.pem file)
 
-
-# TODO: use a configuration method to get these settings
-# interactive vs. non-interactive TBD?
-MYDOMAIN=test.com
-MYEMAIL=me@test.com
-
 # since haproxy is not started yet, use standalone web mode
 # For Re-configuration (renew), we should setup ACME support for haproxy
 systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
 
+    /usr/local/bin/npub2hex --generate > /srv/relaycreator/.nostrcreds.env
+
     mkdir -p /srv/haproxy/certs
 
-    certbot certonly --config-dir="/srv/haproxy/certs" --work-dir="/srv/haproxy/certs" --logs-dir="/srv/haproxy/certs" -d "$MYDOMAIN" --agree-tos -m "$MYEMAIL" --standalone --preferred-challenges http --non-interactive
+    if [ -z "$MYEMAIL" ]; then
+        certbot certonly --config-dir="/srv/haproxy/certs" --work-dir="/srv/haproxy/certs" --logs-dir="/srv/haproxy/certs" -d "$MYDOMAIN" -d "*.$MYDOMAIN" --agree-tos --register-unsafely-without-email --standalone --preferred-challenges http --non-interactive
+    else 
+        certbot certonly --config-dir="/srv/haproxy/certs" --work-dir="/srv/haproxy/certs" --logs-dir="/srv/haproxy/certs" -d "$MYDOMAIN" -d "*.$MYDOMAIN" --agree-tos -m "$MYEMAIL" --standalone --preferred-challenges http --non-interactive
+    fi
 
     # haproxy needs one file
     cat /srv/haproxy/certs/live/$MYDOMAIN/fullchain.pem /srv/haproxy/certs/live/$MYDOMAIN/privkey.pem > /srv/haproxy/certs/bundle.pem
@@ -45,10 +61,51 @@ systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
 
 EOF
 
+source /srv/relaycreator/.nostrcreds.env
+source /srv/mysql/.creator-mysql-uri.txt
+
+NEXTAUTH_SECRET=`openssl rand -base64 32`
+
 # Configure relaycreator .env file
+cat << EOF > /srv/relaycreator/.env
+# application settings
+DATABASE_URL=$DATABASE_URL
+DEPLOY_PUBKEY=$NOSTR_PUBLIC_KEY
+NEXTAUTH_URL=https://$MYDOMAIN
+NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+INVOICE_AMOUNT=21000
+NEXT_PUBLIC_ROOT_DOMAIN=https://$MYDOMAIN
+
+# haproxy settings
+CREATOR_DOMAIN=$MYDOMAIN
+HAPROXY_PEM=bundle.pem
+HAPROXY_STATS_USER=haproxy
+HAPROXY_STATS_PASS=haproxy
+
+# to enable payments you must run LNBITS and set these settings:
+PAYMENTS_ENABLED=false
+LNBITS_ADMIN_KEY=
+LNBITS_INVOICE_READ_KEY=
+LNBITS_ENDPOINT=
+EOF
 
 # Launch relaycreator
+machinectl start relaycreator
+
+# Configure haproxy management daemon (cookiecutter)
+cat << EOF > /srv/haproxy/.cookiecutter.env
+BASE_URL=https://$MYDOMAIN
+PRIVATE_KEY=$NOSTR_PRIVATE_KEY
+EOF
 
 # Launch haproxy
+machinectl start haproxy
+
+# Configure strfry management daemon (cookiecutter)
+cat << EOF > /srv/strfry/.cookiecutter.env
+BASE_URL=https://$MYDOMAIN
+PRIVATE_KEY=$NOSTR_PRIVATE_KEY
+EOF
 
 # Launch strfry
+machinectl start strfry
