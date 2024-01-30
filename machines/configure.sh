@@ -13,13 +13,6 @@ elif [ -z "$MYDOMAIN" ]; then
     exit 1
 fi
 
-# TODO: use a configuration method to get these settings
-# interactive vs. non-interactive TBD?
-MYDOMAIN=test.com
-
-# make this optional (used for expiry notification)
-MYEMAIL=me@test.com
-
 # Launch sequence:
 
 # launch Mysql first.
