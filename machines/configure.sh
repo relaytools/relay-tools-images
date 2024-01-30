@@ -6,7 +6,7 @@
 
 if [ -f ".env" ]; then
     source .env
-else if [ -z "$MYDOMAIN" ]; then
+elif [ -z "$MYDOMAIN" ]; then
     echo "Please configure a .env file for top level configuration or set MYDOMAIN environment variable"
     echo "MYDOMAIN=root level domain name to use"
     echo "MYEMAIL=<optional> email address for SSL certificate registration"
