@@ -4,6 +4,7 @@ Boot=yes
 WorkingDirectory=/
 PrivateUsers=no
 LimitNOFILE=infinity
+LinkJournal=try-host
 [Network]
 VirtualEthernet=no
 [Files]
