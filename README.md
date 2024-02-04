@@ -32,24 +32,16 @@ after the preparatory work, each script has an inline script within an EOF block
 
 ## example
 
-in-progress
-
 ```
 cd relay-tools-images/machines
-# builds the debian base image and skeleton data directories in /srv
+# installs prereqs for systemd-nspawn
+./prereqs.sh
+# builds all the images
 ./build
-
-cd relaycreator && ./build
-cd ..
-
-cd haproxy && ./build
-cd ..
-
-cd mysql && ./build
-cd ..
-
-cd strfry && ./build
-cd ..
+# first: setup DNS to point at this server's IP address
+# set the environment variable to your DNS
+export MYDOMAIN=example.com
+./configure.sh
 ```
 
 ## todo
