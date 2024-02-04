@@ -3,6 +3,7 @@ Boot=yes
 #Parameters=/usr/bin/npm start
 WorkingDirectory=/app
 PrivateUsers=no
+LinkJournal=try-host
 [Network]
 VirtualEthernet=no
 [Files]
