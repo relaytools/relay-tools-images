@@ -25,8 +25,8 @@ machinectl start mysql
 
 # generate a nostr key for use with API
 systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
-    /usr/local/bin/npub2hex --generate > /srv/relaycreator/nostrkey.env
-    chmod 0600 /srv/relaycreator/nostrkey.env
+    /usr/local/bin/npub2hex --generate > /srv/relaycreator/.nostrcreds.env
+    chmod 0600 /srv/relaycreator/.nostrcreds.env
 EOF
 
 # register for SSL certificate with certbot
@@ -36,9 +36,6 @@ EOF
 # since haproxy is not started yet, use standalone web mode
 # For Re-configuration (renew), we should setup ACME support for haproxy
 systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
-
-    /usr/local/bin/npub2hex --generate > /srv/relaycreator/.nostrcreds.env
-
     mkdir -p /srv/haproxy/certs
 
     if [ -z "$MYEMAIL" ]; then

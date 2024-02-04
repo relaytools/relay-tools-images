@@ -9,7 +9,7 @@ userpass=$(pwgen)
 
 # output URI/PW for use by app configuration
 cat <<EOF> /var/lib/mysql/.creator-mysql-uri.txt
-DATABASE_URL="mysql://creator:$userpass@localhost:3306/creator"
+DATABASE_URL="mysql://creator:$userpass@127.0.0.1:3306/creator"
 EOF
 
 # create the database and user
