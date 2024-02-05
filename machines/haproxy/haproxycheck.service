@@ -8,3 +8,6 @@ ExecStart=/usr/local/bin/cookiecutter haproxydeploy
 WorkingDirectory=/etc/haproxy
 User=root
 Group=root
+
+[Install]
+WantedBy=multi-user.target
