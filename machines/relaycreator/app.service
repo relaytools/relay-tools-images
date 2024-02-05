@@ -10,6 +10,7 @@ User=root
 Environment=NODE_ENV=production
 Type=simple
 TimeoutStopSec=0
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
