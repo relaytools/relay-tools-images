@@ -18,7 +18,9 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
 	apt update
-	apt -y install git nodejs npm --no-install-suggests
+	apt -y install git curl
+	curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+	apt -y install nodejs
 	cd /app
 	git clone https://github.com/relaytools/relaycreator.git /app
 	npm install
