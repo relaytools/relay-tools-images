@@ -51,7 +51,16 @@ systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
 
 EOF
 
+
 source /srv/relaycreator/.nostrcreds.env
+
+# wait for mysql configuration to exist
+
+while [ ! -f "/srv/mysql/.creator-mysql-uri.txt" ]
+do
+  sleep 1
+done
+
 source /srv/mysql/.creator-mysql-uri.txt
 
 NEXTAUTH_SECRET=`openssl rand -base64 32`
