@@ -8,3 +8,6 @@ ExecStart=/usr/local/bin/cookiecutter strfrydeploy
 WorkingDirectory=/app/curldown
 User=root
 Group=root
+
+[Install]
+WantedBy=multi-user.target
