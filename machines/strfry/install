@@ -20,18 +20,14 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 		git g++ make pkg-config libtool ca-certificates \
    		libyaml-perl libtemplate-perl libregexp-grammars-perl libssl-dev \
 		zlib1g-dev liblmdb-dev libflatbuffers-dev libsecp256k1-dev libzstd-dev
-	git clone https://github.com/hoytech/strfry.git /app/strfry
-	cd /app/strfry
-	git pull
+	git clone https://github.com/hoytech/strfry.git /app
+	cd /app
 	git submodule update --init
 	make setup-golpe
 	make
-	mv strfry /usr/local/bin/
-	mkdir /app/cookiecutter
 	# build and install cookiecutter
-	git clone https://github.com/relaytools/cookiecutter.git /app/cookiecutter
-	cd /app/cookiecutter
-	git pull
+	git clone https://github.com/relaytools/cookiecutter.git /cookiecutter
+	cd /cookiecutter
 	go build -x
 	cp cookiecutter /usr/local/bin
 	mkdir -p /srv/strfry
