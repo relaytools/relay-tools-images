@@ -3,13 +3,13 @@ Description=relaycreator app
 Wants=network.target
 
 [Service]
-ExecStart=/usr/bin/npm start
+ExecStart=/usr/bin/node /app/node_modules/.bin/next start
 WorkingDirectory=/app
 Restart=always
 User=root
 Environment=NODE_ENV=production
 Type=simple
-TimeoutStopSec=0
+TimeoutStopSec=5
 KillMode=process
 
 [Install]
