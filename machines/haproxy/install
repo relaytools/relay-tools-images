@@ -10,7 +10,6 @@ mkdir /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 cp $SD/haproxycheck.service /var/lib/machines/$APP/lib/systemd/system/haproxycheck.service
 cp $SD/haproxycheck.timer /var/lib/machines/$APP/lib/systemd/system/haproxycheck.timer
-cp -r $SD/skel/* /srv/haproxy
 mkdir -p /srv/haproxy
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
@@ -33,4 +32,5 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cp cookiecutter /usr/local/bin/cookiecutter
 	systemctl enable haproxycheck.timer
 EOF
+cp -r --update=all $SD/skel/* /srv/haproxy
 systemctl stop systemd-nspawn@$APP
