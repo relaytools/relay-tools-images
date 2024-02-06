@@ -32,5 +32,5 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cp cookiecutter /usr/local/bin/cookiecutter
 	systemctl enable haproxycheck.timer
 EOF
-cp -r --update=all $SD/skel/* /srv/haproxy
+cp -rf $SD/skel/* /srv/haproxy
 systemctl stop systemd-nspawn@$APP
