@@ -30,6 +30,10 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd /cookiecutter
 	go build -x
 	cp cookiecutter /usr/local/bin
+    git clone https://github.com/relaytools/spamblaster.git /spamblaster
+    cd /spamblaster
+    go build -x
+    cp spamblaster /usr/local/bin
 	mkdir -p /srv/strfry
 	systemctl enable strfrycheck.timer
 EOF
