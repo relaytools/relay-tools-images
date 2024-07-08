@@ -3,7 +3,7 @@ Description=relaycreator app
 Wants=network.target
 
 [Service]
-ExecStart=/usr/bin/node /app/node_modules/.bin/next start
+ExecStart=/app/node_modules/.bin/next start
 WorkingDirectory=/app
 Restart=always
 User=root
