@@ -5,7 +5,7 @@ deploy_app() {
     git pull
     npx prisma migrate deploy
     npx prisma generate
-    npm run build
+    pnpm run build
     systemctl restart app
 }
 
