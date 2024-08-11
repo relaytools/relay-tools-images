@@ -35,6 +35,10 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
     cd /spamblaster
     go build -x
     cp spamblaster /usr/local/bin
+    git clone https://github.com/relaytools/interceptor.git /interceptor
+    cd /interceptor
+    go build -x
+    cp interceptor /usr/local/bin
 	mkdir -p /srv/strfry
 	systemctl enable strfrycheck.timer
 EOF
