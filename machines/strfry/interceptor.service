@@ -1,0 +1,12 @@
+[Unit]
+Description=interceptor
+StartLimitInterval=0
+
+[Service]
+ExecStart=/usr/local/bin/interceptor
+Restart=always
+RestartSec=1
+#Environment="INTERCEPTOR_CONFIG_URL=https://relay.tools/api/sconfig/relays"
+EnvironmentFile=/srv/strfry/.interceptor.env
+[Install]
+WantedBy=multi-user.target
