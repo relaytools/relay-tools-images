@@ -14,8 +14,8 @@ cat $SD/bash.bashrc >> $SD/debian/etc/bash.bashrc
 systemd-nspawn --pipe -q -D $SD/debian /usr/bin/bash << EOF
 	apt -y full-upgrade
 	apt -y install wget micro
-	wget https://go.dev/dl/go1.20.11.linux-amd64.tar.gz
-	tar xvf go1.20.11.linux-amd64.tar.gz
+	wget https://go.dev/dl/go1.22.5.linux-amd64.tar.gz
+	tar xvf go1.22.5.linux-amd64.tar.gz
 	mv go /usr/local/
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 EOF
