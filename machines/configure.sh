@@ -107,7 +107,7 @@ PRIVATE_KEY=$NOSTR_PRIVATE_KEY
 EOF
 
 cat << EOF > /srv/strfry/.interceptor.env
-INTERCEPTOR_CONFIG_URL=https://relay.tools/api/sconfig/relays
+INTERCEPTOR_CONFIG_URL=https://$MYDOMAIN/api/sconfig/relays
 EOF
 
 # Launch strfry
