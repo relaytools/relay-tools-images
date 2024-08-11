@@ -3,6 +3,7 @@
 deploy_app() {
     echo "detected upstream changes, deploying"
     git pull
+    pnpm install
     npx prisma migrate deploy
     npx prisma generate
     pnpm run build
