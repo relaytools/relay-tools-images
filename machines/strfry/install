@@ -10,6 +10,7 @@ mkdir -p /var/lib/machines/$APP/app
 cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
 mkdir -p /srv/strfry
 cp $SD/strfrycheck.service /var/lib/machines/$APP/lib/systemd/system/strfrycheck.service
+cp $SD/interceptor.service /var/lib/machines/$APP/lib/systemd/system/interceptor.service
 cp $SD/strfrycheck.timer /var/lib/machines/$APP/lib/systemd/system/strfrycheck.timer
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	export PATH=/usr/local/go/bin:$PATH
@@ -41,5 +42,6 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
     cp interceptor /usr/local/bin
 	mkdir -p /srv/strfry
 	systemctl enable strfrycheck.timer
+    systemctl enable interceptor.service
 EOF
 systemctl stop systemd-nspawn@$APP
