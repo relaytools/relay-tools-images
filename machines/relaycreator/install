@@ -24,6 +24,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd /app
 	git clone https://github.com/relaytools/relaycreator.git /app
     npm install -g pnpm
+    npm install -g prisma
 	pnpm install
 	pnpm run build
 	systemctl enable app

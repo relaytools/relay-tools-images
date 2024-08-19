@@ -16,6 +16,8 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
 
+    export DEBIAN_FRONTEND=noninteractive
+
 	apt update
 	apt -y install --no-install-suggests git certbot gpg curl
 
