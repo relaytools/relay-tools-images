@@ -5,7 +5,6 @@ Description=relaycreator deployment
 ExecStart=/usr/local/bin/deploy.sh
 WorkingDirectory=/app
 User=root
-Environment=NODE_ENV=production
 Restart=no
 
 [Install]
