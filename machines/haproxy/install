@@ -25,7 +25,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	echo deb "[signed-by=/usr/share/keyrings/haproxy.debian.net.gpg]" http://haproxy.debian.net bookworm-backports-2.8 main > /etc/apt/sources.list.d/haproxy.list
 	
 	apt update
-	apt -y install haproxy=2.8.\*
+   	apt-get -o Dpkg::Options::="--force-confold" install -y haproxy=2.8.\* 
 
 	# build and install cookiecutter
 	git clone https://github.com/relaytools/cookiecutter.git /app
