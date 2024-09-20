@@ -1,0 +1,14 @@
+[Exec]
+Boot=no
+Parameters=/root/.local/bin/poetry run lnbits --port 5000 --host 127.0.0.1
+PrivateUsers=no
+LimitNOFILE=infinity
+WorkingDirectory=/app
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/srv/lnbits:/srv/lnbits
+Bind=/srv/lnbits/.env:/app/.env
+# These settings can be used if lnbits is on the same machine as bitcoind/lnd
+#Bind=/home/bitcoind/.lnd/data/chain/bitcoin/mainnet/admin.macaroon:/srv/lnbits/admin.macaroon
+#Bind=/home/bitcoind/.lnd/tls.cert:/srv/lnbits/tls.cert
