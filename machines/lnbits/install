@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+PASSWORD=creator
+echo $PASSWORD>$RD/$APP.passwd
+cp -rfpu $RD/debian /var/lib/machines/$APP
+mkdir /var/lib/machines/$APP/app
+cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+mkdir -p /srv/lnbits
+systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
+	. /etc/bash.bashrc
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "$APP">/etc/hostname
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update -y
+    apt-get install python3 pip git curl libsecp256k1-1 libsecp256k1-dev -y
+    curl -sSL https://install.python-poetry.org | python3 -
+    git clone https://github.com/lnbits/lnbits.git /app
+    cd /app
+    git checkout tags/v0.12.10 -b v0.12.10
+    /root/.local/bin/poetry install --only main
+EOF
+systemctl stop systemd-nspawn@$APP
