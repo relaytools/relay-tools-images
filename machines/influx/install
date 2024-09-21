@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+PASSWORD=creator
+echo $PASSWORD>$RD/$APP.passwd
+cp -rfpu $RD/debian /var/lib/machines/$APP
+mkdir /srv/$APP
+mkdir /var/lib/machines/$APP
+# not sure where this came from?
+# chown 101:108 /var/lib/$APP
+cp $SD/nspawn /etc/systemd/nspawn/$APP.nspawn
+cp $SD/firstrun.sh /var/lib/machines/$APP/usr/local/bin/firstrun.sh
+cp $SD/firstrun.service /var/lib/machines/$APP/lib/systemd/system/firstrun.service
+systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
+	. /etc/bash.bashrc
+	echo -e "$PASSWORD\n$PASSWORD" | passwd
+	echo "$APP">/etc/hostname
+	apt -y install influxdb influxdb-client pwgen curl --no-install-suggests
+ chown -R influxdb:influxdb /var/lib/influxdb
+ systemctl enable influxdb
+ systemctl enable firstrun
+EOF
+systemctl stop systemd-nspawn@$APP
