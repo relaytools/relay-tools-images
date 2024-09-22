@@ -14,6 +14,7 @@ db_user=creator
 # output URI/PW for use by app configuration
 cat <<EOF> /var/lib/influxdb/.creator-influxdb-uri.txt
 INFLUXDB_URL="http://127.0.0.1:8086"
+INFLUXDB_ORG="${org_name}"
 INFLUXDB_BUCKET="${bucket_name}"
 INFLUXDB_TOKEN="${token}"
 INFLUXDB_USER="${db_user}"
