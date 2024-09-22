@@ -6,13 +6,16 @@ if [ -f "/firstrun.txt" ]; then
 fi
 
 userpass=$(pwgen)
-db_name=creator
+token=$(pwgen)$(pwgen)$(pwgen)$(pwgen)$(pwgen)$(pwgen)
+org_name=creator
+bucket_name=creator
 db_user=creator
 
 # output URI/PW for use by app configuration
 cat <<EOF> /var/lib/influxdb/.creator-influxdb-uri.txt
 INFLUXDB_URL="http://127.0.0.1:8086"
-INFLUXDB_DATABASE="${db_name}"
+INFLUXDB_BUCKET="${bucket_name}"
+INFLUXDB_TOKEN="${token}"
 INFLUXDB_USER="${db_user}"
 INFLUXDB_PASS="${userpass}"
 EOF
@@ -23,12 +26,7 @@ until curl -s http://localhost:8086/ping; do
  sleep 1
 done
 
-# create the database and user
-if ! influx -execute "show databases" | grep -q "${db_name}"; then
- influx -execute "create database ${db_name}"
-fi
-if ! influx -execute "show users" | grep -q "${db_user}"; then
- influx -execute "create user '${db_user}' with password '${userpass}' with all privileges"
-fi
+# create bucket/token/user
+influx setup --bucket "${bucket_name}" -t "${token}" -o "${org_name}" --username="${db_user}" --password="${userpass}" --host=http://localhost:8086 -f
 
 touch /firstrun.txt
