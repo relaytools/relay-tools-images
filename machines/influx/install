@@ -15,10 +15,16 @@ cp $SD/firstrun.sh /var/lib/machines/$APP/usr/local/bin/firstrun.sh
 cp $SD/firstrun.service /var/lib/machines/$APP/lib/systemd/system/firstrun.service
 systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	. /etc/bash.bashrc
+ cd root
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
-	apt -y install influxdb influxdb-client pwgen curl --no-install-suggests
- chown -R influxdb:influxdb /var/lib/influxdb
+ apt -y install pwgen curl --no-install-suggests
+ curl -LO https://download.influxdata.com/influxdb/releases/influxdb2_2.7.7-1_amd64.deb
+	dpkg -i influxdb2_2.7.7-1_amd64.deb
+ chmod 0750 ~/.influxdbv2
+ wget https://download.influxdata.com/influxdb/releases/influxdb2-client-2.7.5-linux-amd64.tar.gz
+ tar xvzf ./influxdb2-client-2.7.5-linux-amd64.tar.gz
+ cp /root/influx /usr/local/bin/
  systemctl enable influxdb
  systemctl enable firstrun
 EOF
