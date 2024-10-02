@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+# get paths for scripts, the repo parent dir and app name
+SD=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+APP="$(basename $SD)"
+RD="$(dirname "$SD")"
+systemctl stop systemd-nspawn@$APP
+rm -rf /var/lib/machines/$APP /srv/$APP /etc/systemd/nspawn/$APP.nspawn \
+	$SD/$APP $SD/$APP.tar.xz $RD/$APP.passwd
