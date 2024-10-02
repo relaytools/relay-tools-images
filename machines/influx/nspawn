@@ -1,0 +1,10 @@
+[Exec]
+Boot=yes
+Parameters=
+PrivateUsers=no
+LimitNOFILE=infinity
+LinkJournal=try-host
+[Network]
+VirtualEthernet=no
+[Files]
+Bind=/srv/influx:/var/lib/influxdb

@@ -1,0 +1,10 @@
+[Unit]
+Description=First Run InfluxDB bootstrap script
+After=network.target influxdb.service
+Requires=influxdb.service
+
+[Service]
+ExecStart=/usr/local/bin/firstrun.sh
+
+[Install]
+WantedBy=multi-user.target
