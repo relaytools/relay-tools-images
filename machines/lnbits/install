@@ -21,7 +21,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
     curl -sSL https://install.python-poetry.org | python3 -
     git clone https://github.com/lnbits/lnbits.git /app
     cd /app
-    git checkout tags/v0.12.10 -b v0.12.10
+    git checkout tags/v0.12.11 -b v0.12.11
     /root/.local/bin/poetry install --only main
 EOF
 systemctl stop systemd-nspawn@$APP
