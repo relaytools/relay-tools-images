@@ -23,10 +23,10 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 		zlib1g-dev liblmdb-dev libflatbuffers-dev libsecp256k1-dev libzstd-dev
 	git clone https://github.com/hoytech/strfry.git /app
 	cd /app
-    git checkout tags/1.0.3
+    git checkout tags/1.0.4
 	git submodule update --init
 	make setup-golpe
-	make
+	make -j4
 	# build and install cookiecutter
 	git clone https://github.com/relaytools/cookiecutter.git /cookiecutter
 	cd /cookiecutter
