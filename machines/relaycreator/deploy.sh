@@ -3,9 +3,9 @@
 deploy_app() {
     echo "detected upstream changes, deploying"
     git pull
+    systemctl stop app
     pnpm install
     npx prisma migrate deploy
-    npx prisma generate
     pnpm run build
     systemctl restart app
 }
