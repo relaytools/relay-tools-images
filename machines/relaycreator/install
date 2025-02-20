@@ -18,7 +18,7 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	echo -e "$PASSWORD\n$PASSWORD" | passwd
 	echo "$APP">/etc/hostname
 	apt update
-	apt -y install git curl
+	apt -y install git curl build-essential
 	curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 	apt -y install nodejs
 	cd /app
