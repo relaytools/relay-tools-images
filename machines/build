@@ -62,10 +62,6 @@ cd relaycreator
 ./install
 cd ..
 
-cd keys-certs-manager
-./install
-cd ..
-
 echo "image install complete"
 
 machinectl list-images

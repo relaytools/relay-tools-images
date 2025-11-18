@@ -32,6 +32,13 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	cd /app
 	/usr/local/go/bin/go build
 	cp cookiecutter /usr/local/bin/cookiecutter
+
+    # build and install nostr key generator helper
+	git clone https://github.com/jeremyd/npub2hex.git /npub2hex
+	cd /npub2hex
+	/usr/local/go/bin/go build
+	cp npub2hex /usr/local/bin/npub2hex
+
 	systemctl enable haproxycheck.timer
 EOF
 cp -rf $SD/skel/* /srv/haproxy

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 ##
 ### This script handles the configuration state for a deployment of relay tools.  It assumes that the images have been built or downloaded already.
@@ -6,17 +6,19 @@
 
 if [ -f ".env" ]; then
     source .env
-elif [ -z "$MYDOMAIN" ]; then
+elif [ -z "$MYDOMAIN" ] && [ -z "$SELF_SIGNED" ]; then
     echo "Please configure a .env file for top level configuration or set MYDOMAIN environment variable"
     echo "MYDOMAIN=root level domain name to use"
     echo "MYEMAIL=<optional> email address for SSL certificate registration"
+    echo "-or-"
+    echo "for self-signed certificate set:"
+    echo "SELF_SIGNED=mydomain.com"
     exit 1
 fi
 
 # Launch sequence:
 
 # launch Mysql first.
-# run keys-certs-manager second
 # configure relaycreator .env
 # launch the rest
 
@@ -24,7 +26,7 @@ fi
 machinectl start mysql
 
 # generate a nostr key for use with API
-systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
+systemd-nspawn --pipe -M haproxy /bin/bash << EOF
     /usr/local/bin/npub2hex --generate > /srv/relaycreator/.nostrcreds.env
     chmod 0600 /srv/relaycreator/.nostrcreds.env
 EOF
@@ -33,24 +35,42 @@ EOF
 # for use with: haproxy
 # configured in: relaycreator (path), haproxy (bundle.pem file)
 
+## TODO: how does this work with .. wireguard, tor, tailscale?  multi-domains?  ugh
+
+if [ -n "$SELF_SIGNED" ]; then
+    MYDOMAIN=$SELF_SIGNED
+systemd-nspawn --pipe -M haproxy /bin/bash << EOR
+    mkdir -p /etc/haproxy/certs
+    cd /etc/haproxy/certs
+
+    openssl req -newkey ec:<(openssl ecparam -name secp384r1) -nodes -x509 -keyout ca.key -out ca.pem -days 365000 -subj '/CN=${SELF_SIGNED}/O=MyOrganization/C=US'
+    cat ca.key ca.pem > bundle.pem
+EOR
+    
+else
+
 # since haproxy is not started yet, use standalone web mode
 # For Re-configuration (renew), we should setup ACME support for haproxy
+# Done: we have ACME support, However, We have not setup a cronjob for this yet.. (and should)
 systemd-nspawn --pipe -M keys-certs-manager /bin/bash << EOF
-    mkdir -p /srv/haproxy/certs
+    mkdir -p /etc/haproxy/certs
 
     if [ -z "$MYEMAIL" ]; then
-        certbot certonly --config-dir="/srv/haproxy/certs" --work-dir="/srv/haproxy/certs" --logs-dir="/srv/haproxy/certs" -d "$MYDOMAIN" --agree-tos --register-unsafely-without-email --standalone --preferred-challenges http --non-interactive
+        certbot certonly --config-dir="/etc/haproxy/certs" --work-dir="/etc/haproxy/certs" --logs-dir="/etc/haproxy/certs" -d "$MYDOMAIN" --agree-tos --register-unsafely-without-email --standalone --preferred-challenges http --non-interactive
     else 
-        certbot certonly --config-dir="/srv/haproxy/certs" --work-dir="/srv/haproxy/certs" --logs-dir="/srv/haproxy/certs" -d "$MYDOMAIN" --agree-tos -m "$MYEMAIL" --standalone --preferred-challenges http --non-interactive
+        certbot certonly --config-dir="/etc/haproxy/certs" --work-dir="/etc/haproxy/certs" --logs-dir="/etc/haproxy/certs" -d "$MYDOMAIN" --agree-tos -m "$MYEMAIL" --standalone --preferred-challenges http --non-interactive
     fi
 
     # haproxy needs one file
-    cat /srv/haproxy/certs/live/$MYDOMAIN/fullchain.pem /srv/haproxy/certs/live/$MYDOMAIN/privkey.pem > /srv/haproxy/certs/bundle.pem
+    cat /etc/haproxy/certs/live/$MYDOMAIN/fullchain.pem /etc/haproxy/certs/live/$MYDOMAIN/privkey.pem > /etc/haproxy/certs/bundle.pem
 
     chmod 0600 /srv/haproxy/certs/bundle.pem
 
 EOF
 
+fi
+
+echo "$MYDOMAIN"
 
 source /srv/relaycreator/.nostrcreds.env
 
@@ -112,3 +132,5 @@ EOF
 
 # Launch strfry
 machinectl start strfry
+
+echo "All done!"
