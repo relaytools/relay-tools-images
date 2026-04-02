@@ -42,4 +42,5 @@ systemd-nspawn --pipe -q -D /var/lib/machines/$APP /usr/bin/bash << EOF
 	systemctl enable haproxycheck.timer
 EOF
 cp -rf $SD/skel/* /srv/haproxy
+touch /srv/haproxy/throttle_exclude.lst
 systemctl stop systemd-nspawn@$APP
