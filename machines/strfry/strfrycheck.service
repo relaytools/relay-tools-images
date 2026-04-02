@@ -8,6 +8,7 @@ ExecStart=/usr/local/bin/cookiecutter strfrydeploy
 WorkingDirectory=/srv/strfry
 User=root
 Group=root
+LimitNOFILE=infinity
 
 [Install]
 WantedBy=multi-user.target
