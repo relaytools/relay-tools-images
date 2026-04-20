@@ -16,4 +16,7 @@ if grep "max_user_instances" /etc/sysctl.conf; then
 else
     echo fs.inotify.max_user_instances=8192 | tee -a /etc/sysctl.conf && sysctl -p
 fi
-
+if [ ! -f /etc/sysctl.d/99-ephemeral-ports.conf ]; then
+    echo 'net.ipv4.ip_local_port_range = 1024 65535' | tee /etc/sysctl.d/99-ephemeral-ports.conf
+    sysctl -p
+fi
